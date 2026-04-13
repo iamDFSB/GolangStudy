@@ -6,10 +6,20 @@
     <title>Document</title>
 </head>
 <body>
-     <h1>Hello Home {{.Nome}}</h1>
-     <marquee>
-         <p>Send a Message</p>
-     </marquee>
-     <h3>Meu email é {{.Email}}</h3>
+     <h1 style="display: none;" class="user">Hello Home {{.Nome}}</h1>
+     <!-- <marquee> -->
+         <!-- <p>Send a Message</p> -->
+     <!-- </marquee> -->
+     <h3 style="display: none;"  class="user">Meu email é {{.Email}}</h3>
+     <button id="PrintButton">Print</button>
 </body>
+<script>
+    const buttonPrint = document.getElementById("PrintButton");
+    buttonPrint.addEventListener("click", (e) => {
+        const userElements = document.getElementsByClassName("user");
+        Array.from(userElements).forEach(element => {
+            element.style.removeProperty("display");
+        });
+    })
+</script>
 </html>
