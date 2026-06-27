@@ -143,3 +143,43 @@ func GetUserById(w http.ResponseWriter, r *http.Request){
 		return 
 	}
 }
+
+func DeleteUser(w http.ResponseWriter, r *http.Request){
+	params := mux.Vars(r)
+	id, err := strconv.ParseUint(params["id"], 10, 32)
+	if err != nil{
+		w.Write([]byte("An error occured while parsing id param"))
+		return 
+	}
+	
+	db, err := database.Connection()
+	if err != nil{
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("An error occurred while connecting on database"))
+		return 
+	}
+	defer db.Close()
+
+	stmt, err := db.Prepare(`
+		DELETE FROM public.usuario
+		WHERE id = $1
+	`)
+	
+	if err != nil{
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("An error occurred while executing query"))
+		return 
+	}
+	
+	defer stmt.Close()
+	
+	if _, erro := stmt.Exec(id); erro != nil{
+		w.Write([]byte("An error occured while deleting user from db"))
+		return
+	}
+	
+	w.WriteHeader(http.StatusOK)
+
+}
